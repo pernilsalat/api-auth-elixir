@@ -1,0 +1,63 @@
+# version: "3.7"
+# services:
+#   # api_auth:
+#   postgres:
+#     container_name: postgres_dev
+#     image: postgres:latest
+#     environment:
+#       POSTGRES_USER: super_admin
+#       POSTGRES_PASSWORD: SomeSecretPassword
+#       PGDATA: /data/postgres
+#     volumes:
+#        - postgres-db:/data/postgres
+#     ports:
+#       - "5432:5432"
+# volumes:
+#   postgres-db:
+#     driver: local
+
+# # networks:
+
+
+version: "3.7"
+services:
+  # api_auth_dev:
+  #   build:
+  #     context: .
+  #     dockerfile: ./Dockerfile.dev
+  #   container_name: api_auth_dev
+  #   restart: always
+  #   command: sh -c "mix setup && mix phx.server"
+  #   # environment:
+  #   #   - SSH_AUTH_SOCK=/run/host-services/ssh-auth.sock
+  #   # extra_hosts:
+  #   #   - "0.0.0.0:127.0.0.1"
+  #   ports:
+  #     - "0.0.0.0:4000:4000"
+  #   volumes:
+  #     - .:/app
+  #     # - type: bind
+  #     #   source: /run/host-services/ssh-auth.sock
+  #     #   target: /run/host-services/ssh-auth.sock
+  #   depends_on:
+  #     - postgres
+  #     - redis
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: api_auth_db
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"

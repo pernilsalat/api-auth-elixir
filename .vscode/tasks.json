@@ -1,0 +1,51 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+      "label": "test",
+      "type": "shell",
+      "command": "mix test",
+      "group": "test"
+    },
+    {
+      "label": "deps.compile",
+      "type": "shell",
+      "command": "mix deps.get && mix deps.compile",
+      "group": "build"
+    },
+    {
+      "label": "init.env",
+      "dependsOn": ["compose.up"]
+    },
+    {
+      "label": "clean.env",
+      "dependsOn": ["compose.down"]
+    },
+    {
+      "label": "compose.up",
+      "type": "docker-compose",
+      "dockerCompose": {
+        "up": {
+          "detached": true,
+          "build": true
+        },
+        "files": [
+          "${workspaceFolder}/docker-compose.yml" // Running the debug one is important, it overloads the `ASPNETCORE_ENVIRONMENT` environment variable and maps in the debugger from ~/.vsdbg.
+            // You can add more compose files using the usual layering mechanics, but put docker-compose.debug.yml last.
+        ]
+      }
+    },
+    {
+      "label": "compose.down",
+      "type": "docker-compose",
+      "dockerCompose": {
+        "down": {
+          "removeVolumes": false
+        },
+        "files": [
+          "${workspaceFolder}/docker-compose.yml"
+        ]
+      }
+    },
+	]
+}

@@ -1,0 +1,58 @@
+#!/bin/bash
+#PATH=./node_modules/.bin:$PATH
+
+function setup {
+    mix setup
+    compile
+}
+
+function pre-commit {
+    mix format
+    mix dialyzer
+}
+
+function install {
+    mix deps.get
+}
+
+function compile {
+    mix deps.compile
+}
+
+function start-d-c {
+    docker-compose up -d
+}
+
+function stop-d-c {
+    docker-compose stop
+}
+
+function start-p-s {
+    mix phx.server
+}
+
+function dev {
+    start-d-c
+    start-p-s
+    stop-d-c
+}
+
+function test {
+    start-d-c
+    sleep 1
+    mix test
+    stop-d-c
+}
+
+function default {
+    dev
+}
+
+function help {
+    echo "$0 <task> <args>"
+    echo "Tasks:"
+    compgen -A function | cat -n
+}
+
+TIMEFORMAT="Task completed in %3lR"
+time ${@:-default}
